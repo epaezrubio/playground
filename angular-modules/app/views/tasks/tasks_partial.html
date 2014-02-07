@@ -1,0 +1,16 @@
+<div class="table-responsive">
+  <table class="table table-striped" data-ng-controller="TableCtrl" ng-init="module = 'tasks'" ng-model="Table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Assigned to</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="row in rows">
+        <td><a href="#" editable-text="row.title">{{ row.title }}</a></td>
+        <td><a href="javascript:void(0)" data-ng-click="showPopup('app/views/users/users_partial.html')">{{ row.assignee.firstName }}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

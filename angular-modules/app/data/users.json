@@ -1,0 +1,30 @@
+[   
+    {
+        "id": 0,
+        "firstName": "Alice",
+        "lastName": "Riddell",
+        "birthDate": 99999999999999,
+        "email": "alice@riddell.com"
+    },
+    {
+        "id": 1,
+        "firstName": "Bob",
+        "lastName": "Bishop",
+        "birthDate": -98413200,
+        "email": "b.bishop@mail.com"
+    },
+    {
+        "id": 2,
+        "firstName": "Charlie",
+        "lastName": "Brown",
+        "birthDate": 99999999999999,
+        "email": "charlie@brown.org"
+    },
+    {
+        "id": 3,
+        "firstName": "Dave",
+        "lastName": "Dickinson",
+        "birthDate": 9676800,
+        "email": "dave@ion2s.com"
+    }
+]
