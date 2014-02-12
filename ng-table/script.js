@@ -615,6 +615,7 @@ controller('DemoCtrl', function($scope, $filter, ngTableParams) {
 
     $scope.delete = function(items) {
         doAction(items, function(index) {
+            $scope.editingObjects[$scope.data[index].id] = false;
             $scope.data.splice(index, 1)
         })
     }
@@ -625,15 +626,40 @@ controller('DemoCtrl', function($scope, $filter, ngTableParams) {
 
     $scope.edit = function(items) {
         doAction(items, function(index) {
-            $scope.editingObjects[$scope.data[index].id] = $scope.data[index];
+            var item = {};
+            for (var key in $scope.data[index]) {
+                item[key] = $scope.data[index][key];
+            }
+            $scope.editingObjects[$scope.data[index].id] = item;
         })
     };
 
-    $scope.cancelEdit = function(item) {
-        for (var key in $scope.editingObjects[item.id]) {
-            item[key] = $scope.editingObjects[item.id][key];
-        }
-        $scope.editingObjects[item.id] = false;
+    $scope.revertSelected = function() {
+        $scope.revert(getSelectedItems());
+    };
+
+    $scope.revert = function(items) {
+        doAction(items, function(index) {
+            if ($scope.editingObjects[$scope.data[index].id]) {
+                var item = $scope.data[index];
+                for (var key in $scope.editingObjects[$scope.data[index].id]) {
+                    item[key] = $scope.editingObjects[$scope.data[index].id][key];
+                }
+                $scope.editingObjects[$scope.data[index].id] = false;
+            }
+        })
+    };
+
+    $scope.saveSelected = function() {
+        $scope.save(getSelectedItems());
+    };
+
+    $scope.save = function(items) {
+        doAction(items, function(index) {
+            if ($scope.editingObjects[$scope.data[index].id]) {
+                $scope.editingObjects[$scope.data[index].id] = false;
+            }
+        })
     };
 
     $scope.editing = function(item) {

@@ -19,7 +19,6 @@
     <table class="table">
         <thead>
             <th></th>
-            <th></th>
             <th><a href="#" ng-click="sorting = (sorting == 'title') ? '-title' : 'title'">Titel</a></th>
             <th><a href="#" ng-click="sorting = (sorting == 'assignedTo') ? '-assignedTo' : 'assignedTo'">Zugewiesen</a></th>
             <th><a href="#" ng-click="sorting = (sorting == 'status') ? '-status' : 'status'">Status</a></th>
@@ -32,11 +31,6 @@
             <tr class="ng-table-group" ng-repeat-start="project in data | orderBy:sorting" ng-init="project.hideTasks = false"> 
                 <td width="30">
                     <input type="checkbox" ng-click="checkedItems[project.id] = checkedItems[project.id] ? false : project" />
-                </td>
-                <td width="30">
-                    <a ng-if="editing(project)" href="#" ng-click="cancelEdit(project)">
-                        <span class="glyphicon glyphicon-ban-circle"></span>
-                    </a>
                 </td>
                 <td>
                     <div ng-show="!editing(project)">
@@ -112,7 +106,6 @@
             </tr>
             <tr ng-repeat="task in project.tasks | orderBy:sorting" ng-repeat-end ng-show="project.hideTasks">
                 <td></td>
-                <td></td>
                 <td>{{ task.title }}</td>
                 <td>{{ task.assignedTo }}</td>
                 <td>{{ task.status }}</td>
@@ -125,5 +118,7 @@
     </table>
     <input type="button" ng-click="deleteSelected()" value="delete" />
     <input type="button" ng-click="editSelected()" value="edit" />
+    <input type="button" ng-click="saveSelected()" value="save" />
+    <input type="button" ng-click="revertSelected()" value="revert" />
 </body>
 </html>
