@@ -31,89 +31,81 @@
         <tbody>
             <tr class="ng-table-group" ng-repeat-start="project in data | orderBy:sorting" ng-init="project.hideTasks = false"> 
                 <td width="30">
-                    <a ng-if="editId !== project.id" href="#" ng-click="delete(project)">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                    <a ng-if="editId === project.id" href="#" ng-click="cancelEdit(project)">
+                    <input type="checkbox" ng-click="checkedItems[project.id] = checkedItems[project.id] ? false : project" />
+                </td>
+                <td width="30">
+                    <a ng-if="editing(project)" href="#" ng-click="cancelEdit(project)">
                         <span class="glyphicon glyphicon-ban-circle"></span>
                     </a>
                 </td>
-                <td width="30">
-                    <a ng-if="editId === project.id" href="#" ng-click="edit({id: -1})">
-                        <span class="glyphicon glyphicon-ok"></span>
-                    </a>
-                    <a ng-if="editId !== project.id" href="#" ng-click="edit(project)">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                </td>
                 <td>
-                    <div ng-show="editId !== project.id">
+                    <div ng-show="!editing(project)">
                         <a href="" ng-click="project.hideTasks = !project.hideTasks">
                             <span class="glyphicon" ng-if="project.tasks.length > 0" ng-class="{ 'glyphicon-chevron-right': !project.hideTasks, 'glyphicon-chevron-down': project.hideTasks }"></span>
                             <strong>{{ project.title }}</strong>
                         </a>
                     </div>
-                    <div ng-show="editId === project.id">
+                    <div ng-show="editing(project)">
                         <input type="text" ng-model="project.title" />
                     </div>
                 </td>
                 <td>
-                    <div ng-show="editId !== project.id">
+                    <div ng-show="!editing(project)">
                         <a href="" ng-click="project.hideTasks = !project.hideTasks">
                             <strong>{{ project.assignedTo }}</strong>
                         </a>
                     </div>
-                    <div ng-show="editId === project.id">
+                    <div ng-show="editing(project)">
                         <input type="text" ng-model="project.assignedTo" />
                     </div>
                 </td>
                 <td>
-                    <div ng-show="editId !== project.id">
+                    <div ng-show="!editing(project)">
                         <a href="" ng-click="project.hideTasks = !project.hideTasks">
                             <strong>{{ project.status }}</strong>
                         </a>
                     </div>
-                    <div ng-show="editId === project.id" ng-init="states = ['Neu', 'Zugewiessen', 'Erledigt']">
+                    <div ng-show="editing(project)" ng-init="states = ['Neu', 'Zugewiessen', 'Erledigt']">
                         <select ng-model="project.status" ng-options="status for status in states">
                     </div>
                 </td>
                 <td>
-                    <div ng-show="editId !== project.id">
+                    <div ng-show="!editing(project)">
                         <a href="" ng-click="project.hideTasks = !project.hideTasks">
                             <strong>{{ project.start }}</strong>
                         </a>
                     </div>
-                    <div ng-show="editId === project.id">
+                    <div ng-show="editing(project)">
                         <input type="text" ng-model="project.start" />
                     </div>
                 </td>
                 <td>
-                    <div ng-show="editId !== project.id">
+                    <div ng-show="!editing(project)">
                         <a href="" ng-click="project.hideTasks = !project.hideTasks">
                             <strong>{{ project.end }}</strong>
                         </a>
                     </div>
-                    <div ng-show="editId === project.id">
+                    <div ng-show="editing(project)">
                         <input type="text" ng-model="project.end" />
                     </div>
                 </td>
                 <td>
-                    <div ng-show="editId !== project.id">
+                    <div ng-show="!editing(project)">
                         <a href="" ng-click="project.hideTasks = !project.hideTasks">
                             <strong>{{ project.time }}h</strong>
                         </a>
                     </div>
-                    <div ng-show="editId === project.id">
+                    <div ng-show="editing(project)">
                         <input type="range" max="40" step="0.25" ng-model="project.time" /> {{ project.time | number:2 }}h
                     </div>
                 </td>
                 <td>
-                    <div ng-show="editId !== project.id">
+                    <div ng-show="!editing(project)">
                         <a href="" ng-click="project.hideTasks = !project.hideTasks">
                             <strong>{{ project.progress }}%</strong>
                         </a>
                     </div>
-                    <div ng-show="editId === project.id">
+                    <div ng-show="editing(project)">
                         <input type="range" ng-model="project.progress" />
                     </div>
                 </td>
@@ -131,5 +123,7 @@
             </tr>
         </tbody>
     </table>
+    <input type="button" ng-click="deleteSelected()" value="delete" />
+    <input type="button" ng-click="editSelected()" value="edit" />
 </body>
 </html>

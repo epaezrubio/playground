@@ -1,7 +1,10 @@
 var app = angular.module('main', ['ngTable', 'ngAnimate']).
 controller('DemoCtrl', function($scope, $filter, ngTableParams) {
-    var editingObject = {};
-    $scope.table = {editId: "2"};
+
+    $scope.editingObjects = [];
+
+    $scope.checkedItems = {};
+
     $scope.data = [ {
         "id": 0,
         "progress": 91,
@@ -587,29 +590,54 @@ controller('DemoCtrl', function($scope, $filter, ngTableParams) {
             }
         ]} ]
 
-    $scope.delete = function(item) {
-        var index;
-        for (var i = 0, ii = $scope.data.length; i < ii; i++) {
-            if ($scope.data[i].id === item.id) {
-                index = i;
-                break;
+    var doAction = function(items, action) {
+        var toDoChanges = items[0] ? items : [items];
+        for (var i = 0; i < $scope.data.length; i++) {
+            for (var j = 0, jj = toDoChanges.length; j < jj; j++) {
+                if ($scope.data[i].id === toDoChanges[j].id) {
+                    action(i);
+                }
             }
         }
-        $scope.data.splice(index,1);  
     };
 
-    $scope.edit = function(item) {
-        $scope.editId = item.id
-        for (var key in item) {
-            editingObject[key] = item[key];
+    var getSelectedItems = function() {
+        var items = [];
+        for (var key in $scope.checkedItems) {
+            if (typeof $scope.checkedItems[key] === "object") items.push($scope.checkedItems[key]);
         }
+        return items;
+    }
+
+    $scope.deleteSelected = function() {
+        $scope.delete(getSelectedItems());
+    }
+
+    $scope.delete = function(items) {
+        doAction(items, function(index) {
+            $scope.data.splice(index, 1)
+        })
+    }
+
+    $scope.editSelected = function() {
+        $scope.edit(getSelectedItems());
+    };
+
+    $scope.edit = function(items) {
+        doAction(items, function(index) {
+            $scope.editingObjects[$scope.data[index].id] = $scope.data[index];
+        })
     };
 
     $scope.cancelEdit = function(item) {
-        for (var key in editingObject) {
-            item[key] = editingObject[key];
+        for (var key in $scope.editingObjects[item.id]) {
+            item[key] = $scope.editingObjects[item.id][key];
         }
-        $scope.editId = -1;
-        editingObject = {};
+        $scope.editingObjects[item.id] = false;
     };
+
+    $scope.editing = function(item) {
+        return (typeof $scope.editingObjects[item.id] === "object");
+    }
+
 });
