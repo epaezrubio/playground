@@ -1,3 +1,31 @@
 <div>
     <div channelitem></div>
 </div>
+
+<br />
+<br />
+<br />
+<br />
+
+<div style="border: 1px solid #808080; background: #ffffe0; padding: 30px">
+    <panel>
+        <div>Status: {{getPanelStatus()}}</div>
+        <br/>
+        <button ng-click="switchStatus()">Switch</button>
+
+
+        <placeholder template="title" status="edit"></placeholder>
+        <placeholder template="description" status="{{getPanelStatus()}}"></placeholder>
+        <placeholder template="title" status="{{getPanelStatus()}}"></placeholder>
+
+
+
+
+        <!--<div ng-init="fields = []">-->
+            <!--<placeholder ng-repeat="field in fields" template="{{field}}" status="{{getPanelStatus()}}"></placeholder>-->
+        <!--</div>-->
+
+
+
+    </panel>
+</div>

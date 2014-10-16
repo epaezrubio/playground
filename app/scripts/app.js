@@ -46,14 +46,14 @@
 
 
     angular.module('playgroundApp', [
-            'ngCookies',
-            'ngResource',
-            'ngSanitize',
-            'ngRoute',
-            'dataProviderApp',
-            'ui.bootstrap'
+        'ngCookies',
+        'ngResource',
+        'ngSanitize',
+        'ngRoute',
+        'dataProviderApp',
+        'ui.bootstrap'
 
-        ])
+    ])
         .config(function ($routeProvider, $provide) {
             $routeProvider
                 .when('/', {
@@ -143,6 +143,58 @@
                 toggle();
             }, 20);
 
+        })
+        .controller("PanelCtrl", function ($scope, $http) {
+
+
+            var templates = {};
+
+            var n = 0;
+            var statuses = ["show", "edit", "saving"]
+            var status = statuses[n];
+
+            $scope.switchStatus = function() {
+                status = statuses[++n % statuses.length]
+            };
+
+            $scope.getPanelStatus = function() {
+                return status;
+            };
+
+            return {
+                getTemplate: function (template) {
+                    return $http.get("/views/partials/" + template + ".tpl.html").then(function (result) {
+                        templates.t1 = result.data;
+                        return result.data;
+                    });
+                },
+                getPanelStatus: $scope.getPanelStatus
+            }
+
+        })
+        .directive("panel", function () {
+
+            return {
+                restrict: "E",
+                controller: "PanelCtrl"
+            }
+
+        }).directive("placeholder", function ($timeout) {
+            return {
+                restrict: "E",
+                require: ["^panel"],
+                link: function ($scope, $element, $attrs, $controllers) {
+                    var PanelCtrl = $controllers[0];
+                    var status = $attrs.status;
+                    var template = $attrs.template;
+                    PanelCtrl.getTemplate(template).then(function (tpl) {
+                        $scope.$watch(function() {
+                            var elem = $(tpl).filter("[pp-status='" + $attrs.status + "']");
+                            $element.empty().append(elem);
+                        });
+                    })
+                }
+            }
         });
 
 
