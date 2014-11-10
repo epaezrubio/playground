@@ -144,6 +144,9 @@
             }, 20);
 
         })
+        .controller("AutoCompleteCtrl", function ($scope, $http) {
+            $scope.searchBox = ""
+        })
         .controller("PanelCtrl", function ($scope, $http) {
 
 
@@ -153,11 +156,11 @@
             var statuses = ["show", "edit", "saving"]
             var status = statuses[n];
 
-            $scope.switchStatus = function() {
+            $scope.switchStatus = function () {
                 status = statuses[++n % statuses.length]
             };
 
-            $scope.getPanelStatus = function() {
+            $scope.getPanelStatus = function () {
                 return status;
             };
 
@@ -179,7 +182,8 @@
                 controller: "PanelCtrl"
             }
 
-        }).directive("placeholder", function ($timeout) {
+        })
+        .directive("placeholder", function ($timeout) {
             return {
                 restrict: "E",
                 require: ["^panel"],
@@ -188,11 +192,42 @@
                     var status = $attrs.status;
                     var template = $attrs.template;
                     PanelCtrl.getTemplate(template).then(function (tpl) {
-                        $scope.$watch(function() {
+                        $scope.$watch(function () {
                             var elem = $(tpl).filter("[pp-status='" + $attrs.status + "']");
                             $element.empty().append(elem);
                         });
                     })
+                }
+            }
+        })
+        .directive("ppAutocomplete", function ($http) {
+
+
+            return {
+                restrict: "A",
+                link: function ($scope, $element, $attributes) {
+
+                    $scope.results = [];
+
+                    $element.autocomplete({
+                        select: function (event, ui) {
+                            $scope.$apply(function() {
+                                $scope.searchBox = ui.item.value;
+                            });
+                        },
+                        source: function(search, callback) {
+                            $http.get("mocks/autocomplete").then(function(data) {
+                                callback(data.data.filter(function (d) {
+                                    return d.toLowerCase().indexOf(search.term.toLowerCase()) === 0;
+                                }));
+                            })
+                        }
+                    });
+
+                    $scope.$watch("searchBox", function() {
+                        console.log(arguments);
+                    })
+
                 }
             }
         });
